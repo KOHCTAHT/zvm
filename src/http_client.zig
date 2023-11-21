@@ -79,7 +79,7 @@ test "http getContent" {
 test "http getHeaders" {
     const stderr = std.io.getStdErr().writer();
     var allocator = std.testing.allocator;
-    var headers = try getHeaders(allocator, "https://ziglang.org/download/index.json");
+    const headers = try getHeaders(allocator, "https://ziglang.org/download/index.json");
     defer allocator.free(headers);
 
     for (headers) |h| {

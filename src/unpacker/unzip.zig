@@ -18,7 +18,7 @@ const EndOfCDirRecord = struct {
     cdir_offset: u32,
 
     fn findInFile(file: std.fs.File) !EndOfCDirRecord {
-        var file_size = try file.getEndPos();
+        const file_size = try file.getEndPos();
         if (file_size >= std.math.maxInt(u32)) {
             return error.UnsupportedZipFormat;
         }
@@ -27,7 +27,7 @@ const EndOfCDirRecord = struct {
         }
 
         var buffer: Buffer = .{};
-        var offset: u64 = if (file_size > buffer.len) file_size - buffer.len else 0;
+        const offset: u64 = if (file_size > buffer.len) file_size - buffer.len else 0;
 
         // TODO: while( offset > EndOfCDirRecord.size ) move offset backwards and refill buffer
         try file.seekTo(offset);
@@ -207,7 +207,7 @@ pub fn unzipToDirectory(
     var allocator = arena.allocator();
     defer arena.deinit();
 
-    var eocdr = try EndOfCDirRecord.findInFile(file);
+    const eocdr = try EndOfCDirRecord.findInFile(file);
     if (eocdr.this_disk_no != 0 or eocdr.cdir_disk_no != 0) return error.MultivolumeZipNotSupported;
     if (eocdr.num_entries == 0) return error.EmptyZipFile;
 
@@ -221,7 +221,7 @@ pub fn unzipToDirectory(
     var bytes_inbuf = try file.readAll(&buffer.buffer);
 
     var offset: usize = 0;
-    var cdir_array = try allocator.alloc(CDirEntry, eocdr.num_entries);
+    const cdir_array = try allocator.alloc(CDirEntry, eocdr.num_entries);
 
     // read all Central Directory Entries into an array:
     for (cdir_array) |*cdir_entry| {
@@ -270,7 +270,7 @@ pub fn unzipToDirectory(
                 }
             },
             .deflate => {
-                var lr = std.io.limitedReader(file.reader(), cdir.compressed_size);
+                const lr = std.io.limitedReader(file.reader(), cdir.compressed_size);
                 var br = std.io.bufferedReaderSize(4 * MB, lr);
                 var dec = try std.compress.deflate.decompressor(allocator, br.reader(), null);
                 defer dec.deinit();

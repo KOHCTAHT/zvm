@@ -9,7 +9,7 @@ pub fn main() !void {
             std.debug.print("leak detected\n", .{});
         }
     }
-    var allocator = gpa.allocator();
+    const allocator = gpa.allocator();
 
     const conf = try config.load(allocator);
     defer conf.deinit(allocator);

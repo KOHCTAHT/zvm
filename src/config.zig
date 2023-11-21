@@ -14,14 +14,14 @@ pub const AppConfig = struct {
 };
 
 pub fn load(allocator: std.mem.Allocator) !AppConfig {
-    var app_dir = try std.fs.getAppDataDir(allocator, "zvm");
+    const app_dir = try std.fs.getAppDataDir(allocator, "zvm");
     errdefer allocator.free(app_dir);
 
     var dir = try std.fs.openDirAbsolute(app_dir, .{});
     defer dir.close();
 
     var zig_root_maybe: ?[]const u8 = null;
-    var text_or_err = dir.readFileAlloc(allocator, "config.json", max_config_size);
+    const text_or_err = dir.readFileAlloc(allocator, "config.json", max_config_size);
     if (text_or_err) |text| {
         defer allocator.free(text);
 

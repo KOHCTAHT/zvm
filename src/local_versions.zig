@@ -106,10 +106,10 @@ pub fn getAll(self: *const Self) []const LocalVersion {
 }
 
 pub fn makeCurrent(self: *Self, allocator: std.mem.Allocator, dir_name: []const u8) !void {
-    var link_path = try std.fs.path.join(allocator, &.{ self.zig_root, anchor_dir_name });
+    const link_path = try std.fs.path.join(allocator, &.{ self.zig_root, anchor_dir_name });
     defer allocator.free(link_path);
 
-    var dest_path = try std.fs.path.join(allocator, &.{ self.zig_root, dir_name });
+    const dest_path = try std.fs.path.join(allocator, &.{ self.zig_root, dir_name });
     defer allocator.free(dest_path);
 
     switch (builtin.os.tag) {
@@ -119,7 +119,7 @@ pub fn makeCurrent(self: *Self, allocator: std.mem.Allocator, dir_name: []const 
 }
 
 pub fn getCurrent(self: *Self, allocator: std.mem.Allocator) !?LocalVersion {
-    var link_path = try std.fs.path.join(allocator, &.{ self.zig_root, anchor_dir_name });
+    const link_path = try std.fs.path.join(allocator, &.{ self.zig_root, anchor_dir_name });
     defer allocator.free(link_path);
 
     var buffer: [std.os.PATH_MAX]u8 = undefined;

@@ -7,7 +7,7 @@ pub fn execute(self: @This(), ctx: *const Context) !void {
     var ver_index = try util.downloadVersionIndex(ctx.allocator);
     defer ver_index.deinit();
 
-    var ver_info = try ver_index.getVersionInfo("master");
+    const ver_info = try ver_index.getVersionInfo("master");
     try ctx.stdout.print("Available versions:\n" ++
         " master\t(version: {?s}-{?s}  date: {?s})\n", .{ ver_info.version, ver_info.build_id, ver_info.date });
 

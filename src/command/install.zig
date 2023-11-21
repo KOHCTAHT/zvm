@@ -47,7 +47,7 @@ pub fn execute(self: Self, ctx: *const Context) !void {
 
     const artefact = try ver_index.getArtefact(self.version.?, platform);
 
-    var temp_path = try known_folder.getTempFolder(ctx.allocator);
+    const temp_path = try known_folder.getTempFolder(ctx.allocator);
     defer ctx.allocator.free(temp_path);
 
     var temp_dir = try std.fs.openDirAbsolute(temp_path, .{});
@@ -56,13 +56,13 @@ pub fn execute(self: Self, ctx: *const Context) !void {
     const dw_file_name = std.fs.path.basename(artefact.tarball);
     var dw_file = try temp_dir.createFile(dw_file_name, .{});
     defer dw_file.close();
-    var writer = dw_file.writer();
+    const writer = dw_file.writer();
 
     try ctx.stdout.print("Downloading {s}{c}{s}\n", .{ temp_path, std.fs.path.sep, dw_file_name });
     try http_client.downloadFile(ctx.allocator, artefact.tarball, writer);
     defer temp_dir.deleteFile(dw_file_name) catch {};
 
-    var dw_file_path = try std.fs.path.join(ctx.allocator, &.{ temp_path, dw_file_name });
+    const dw_file_path = try std.fs.path.join(ctx.allocator, &.{ temp_path, dw_file_name });
     defer ctx.allocator.free(dw_file_path);
 
     std.debug.print("\nzig_root: {s}\n", .{ctx.zig_root});
@@ -83,7 +83,7 @@ fn progressCallback(total: usize, current: usize, ctx: anytype) void {
         ctx.stdout.print(ansi_hide_cursor ++ "\nUnpacking {} files to zig_root\n", .{total}) catch unreachable;
     } else {
         var buffer: [128]u8 = undefined;
-        var line = std.fmt.bufPrint(buffer[0..], "\r {: >7}/{}", .{ current, total }) catch unreachable;
+        const line = std.fmt.bufPrint(buffer[0..], "\r {: >7}/{}", .{ current, total }) catch unreachable;
         ctx.stdout.writeAll(line) catch unreachable;
         if (current == total)
             ctx.stdout.writeAll(ansi_show_cursor) catch unreachable;

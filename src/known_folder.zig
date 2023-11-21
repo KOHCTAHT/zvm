@@ -13,7 +13,7 @@ pub fn getTempFolder(allocator: std.mem.Allocator) ![]const u8 {
 
 test "getTempFolder" {
     var allocator = std.testing.allocator;
-    var temp = try getTempFolder(allocator);
+    const temp = try getTempFolder(allocator);
     defer allocator.free(temp);
     std.debug.print("{s}\n", .{temp});
     try std.testing.expect(temp.len != 0);

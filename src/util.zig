@@ -7,7 +7,7 @@ const VersionIndex = @import("version_index.zig").VersionIndex;
 const index_url = "https://ziglang.org/download/index.json";
 
 pub fn downloadVersionIndex(allocator: std.mem.Allocator) !VersionIndex {
-    var index_json = try http_client.getContent(allocator, index_url);
+    const index_json = try http_client.getContent(allocator, index_url);
     defer allocator.free(index_json);
 
     return VersionIndex.fromJson(allocator, index_json);
